@@ -18,7 +18,7 @@
 
     {% if image_path %}
         <h2>업로드한 사진</h2>
-        <img src="{{ image_path }}" style="max-width: 500px;"><br><br>
+        <img src="{{ url_for('static', filename=image_path.split('static/')[1]) }}" style="max-width: 500px;"><br><br>
         <h3>AI 피드백:</h3>
         <p>{{ feedback }}</p>
     {% endif %}
