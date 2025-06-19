@@ -35,14 +35,23 @@ http://localhost:5000
 ## 프로젝트 폴더 구조 예시
 
 project/
+
 ├── app.py
+
 ├── templates/
+
 │   └── index.html
+
 ├── static/
+
 │   ├── uploads/           ← 업로드된 이미지 저장
+
 │   └── css/
+
 │       └── style.css      ← 선택적 CSS 스타일 파일
+
 ├── log/
+
 │   └── feedback_log.txt   ← AI 피드백 기록 (자동 생성됨)
 
 ## 기능 요약
