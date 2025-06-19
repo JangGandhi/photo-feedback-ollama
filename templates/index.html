@@ -3,16 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <title>AI 사진 평가</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <h1>사진 피드백 시스템</h1>
-  <form action="/evaluate" method="post" enctype="multipart/form-data">
-    <input type="file" name="image" accept="image/*" required>
-    <button type="submit">사진 업로드 및 평가</button>
-  </form>
+  <div class="hero">
+    <div class="overlay">
+      <h1>사진 피드백 시스템</h1>
 
-  <form action="/history" method="get" style="margin-top: 10px;">
-    <button type="submit">이전 피드백 확인</button>
-  </form>
+      <form action="/evaluate" method="post" enctype="multipart/form-data">
+  <label for="file-upload" class="custom-file-upload">📂 사진 선택하기</label>
+  <input id="file-upload" type="file" name="image" accept="image/*" required>
+  <button type="submit">📤 사진 업로드 및 평가</button>
+     </form>
+
+      <form action="/history" method="get">
+        <button class="secondary">📂 이전 피드백 확인</button>
+      </form>
+    </div>
+  </div>
 </body>
 </html>
