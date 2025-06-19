@@ -4,22 +4,118 @@
   <meta charset="UTF-8">
   <title>AI 사진 평가</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .upload-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .button {
+      padding: 10px 15px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-block;
+      transition: background-color 0.2s ease;
+    }
+    .button:hover {
+      background-color: #333;
+    }
+    .drop-box {
+      border: 2px dashed #999;
+      border-radius: 5px;
+      padding: 10px 15px;
+      text-align: center;
+      width: 180px;
+      color: #555;
+      background-color: #f9f9f9;
+      font-size: 14px;
+      transition: background-color 0.3s ease;
+    }
+    .drop-box.dragover {
+      background-color: #e0f0ff;
+      border-color: #66afe9;
+    }
+    input[type="file"] {
+      display: none;
+    }
+
+    .custom-file-upload {
+      all: unset;
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid white;
+      border-radius: 30px;
+      color: white;
+      font-size: 16px;
+      padding: 12px 24px;
+      cursor: pointer;
+      margin: 4px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      text-decoration: none;
+    }
+
+    .custom-file-upload:hover {
+      background-color: rgba(255, 255, 255, 0.25);
+    }
+  </style>
 </head>
 <body>
   <div class="hero">
     <div class="overlay">
       <h1>사진 피드백 시스템</h1>
 
-      <form action="/evaluate" method="post" enctype="multipart/form-data">
-  <label for="file-upload" class="custom-file-upload">📂 사진 선택하기</label>
-  <input id="file-upload" type="file" name="image" accept="image/*" required>
-  <button type="submit">📤 사진 업로드 및 평가</button>
-     </form>
+      <form id="upload-form" action="/evaluate" method="post" enctype="multipart/form-data">
+        <div class="upload-row">
+          <label class="custom-file-upload">
+            사진 선택하기
+            <input id="file-upload" type="file" name="image" accept="image/*" required>
+          </label>
+          <div id="drop-box" class="drop-box">또는<br>여기로 드래그</div>
+        </div>
+        <button type="submit" class="button">사진 업로드 및 평가</button>
+      </form>
 
       <form action="/history" method="get">
-        <button class="secondary">📂 이전 피드백 확인</button>
+        <button class="button" style="margin-top: 10px;">이전 피드백 확인</button>
       </form>
     </div>
   </div>
+
+  <script>
+    const dropBox = document.getElementById('drop-box');
+    const fileInput = document.getElementById('file-upload');
+
+    dropBox.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropBox.classList.add('dragover');
+    });
+
+    dropBox.addEventListener('dragleave', () => {
+      dropBox.classList.remove('dragover');
+      dropBox.innerHTML = "또는<br>여기로 드래그";
+    });
+
+    dropBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropBox.classList.remove('dragover');
+
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        const fileName = files[0].name;
+        dropBox.innerHTML = `${fileName}<br>업로드 준비됨`;
+      }
+    });
+  </script>
 </body>
 </html>

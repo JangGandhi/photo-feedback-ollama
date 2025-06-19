@@ -19,19 +19,19 @@
   </style>
 </head>
 <body>
-  <h2>📤 업로드한 사진</h2>
+  <h2>업로드한 사진</h2>
   <img src="{{ image_path }}" style="max-width: 400px;"><br><br>
 
-  <h3>📄 AI 평가 피드백</h3>
+  <h3>AI 평가 피드백</h3>
   <div class="feedback-box">
     {{ feedback }}
   </div>
 
-  <h3>🎨 추천 필터: {{ filter_name }}</h3>
+  <h3>추천 필터: {{ filter_name }}</h3>
   <p>{{ reason }}</p>
 
   <form action="/apply_filter" method="post">
-    <button type="submit">🎨 추천 필터 적용하기</button>
+    <button type="submit">추천 필터 적용하기</button>
   </form>
 </body>
 </html>

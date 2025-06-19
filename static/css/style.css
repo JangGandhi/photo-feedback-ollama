@@ -42,6 +42,7 @@ form {
 }
 
 input[type="file"] {
+  display: none;
   margin-bottom: 10px;
   color: white;
 }
@@ -67,23 +68,20 @@ button.secondary {
   border: 1px solid #ccc;
 }
 
-input[type="file"] {
-  display: none;
-}
-
+/* 수정된 부분: 사진 선택 버튼도 동일한 스타일 적용 */
 .custom-file-upload {
   display: inline-block;
-  padding: 12px 20px;
+  padding: 12px 24px;
   cursor: pointer;
-  background-color: #ffffff20;
-  border: 1px solid #fff;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid white;
   border-radius: 30px;
   color: white;
-  font-size: 15px;
-  margin-bottom: 12px;
+  font-size: 16px;
+  margin: 4px;
   transition: background-color 0.3s ease;
 }
 
 .custom-file-upload:hover {
-  background-color: #ffffff40;
+  background-color: rgba(255, 255, 255, 0.25);
 }
