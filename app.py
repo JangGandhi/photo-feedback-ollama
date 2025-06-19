@@ -93,9 +93,9 @@ def evaluate():
     # 필터 추천
     filter_prompt = """
 당신은 사진 전문가입니다. 아래 이미지를 보고 다음 중 하나의 필터를 추천하고 그 이유를 설명하세요.
-가능한 필터: [\"BLUR\", \"SHARPEN\", \"DETAIL\", \"CONTOUR\", \"EDGE_ENHANCE\", \"SMOOTH\"]
+가능한 필터: [\"BLUR\", \"SHARPEN\", \"DETAIL\", \"EDGE_ENHANCE\", \"SMOOTH\"]
 
-아래 JSON 형식으로만 출력하세요:
+아래 JSON 형식으로만 출력하세요. 또한 reason을 출력할때는 반드시 한국어로 설명해줘:
 {
   "recommended_filter": "필터 이름",
   "reason": "왜 이 필터를 추천하는지 한글로 설명해줘."
