@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>이전 피드백 기록</title>
+</head>
+<body>
+  <h2>📚 이전 사진 피드백 기록</h2>
+  {% if entries %}
+    <ul>
+      {% for entry in entries %}
+        <li>
+          <strong>{{ entry.timestamp }}</strong><br>
+          <pre>{{ entry.feedback }}</pre>
+          <hr>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>기록된 피드백이 없습니다.</p>
+  {% endif %}
+  <a href="/">돌아가기</a>
+</body>
+</html>

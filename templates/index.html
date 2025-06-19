@@ -1,26 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>사진 피드백</title>
+  <meta charset="UTF-8">
+  <title>AI 사진 평가</title>
 </head>
 <body>
-    <h1>사진 업로드 및 AI 피드백</h1>
+  <h1>📷 사진 피드백 시스템</h1>
+  <form action="/evaluate" method="post" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">사진 업로드 및 평가</button>
+  </form>
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" accept="image/*" required>
-        <button type="submit">사진 업로드</button>
-    </form>
-
-    <form action="/clear_log" method="post" style="margin-top: 10px;">
-        <button type="submit">분석 로그 초기화</button>
-    </form>
-
-    {% if image_path %}
-        <h2>업로드한 사진</h2>
-        <img src="{{ image_path }}" style="max-width: 500px;"><br><br>
-        <h3>AI 피드백:</h3>
-        <p>{{ feedback }}</p>
-    {% endif %}
+  <form action="/history" method="get" style="margin-top: 10px;">
+    <button type="submit">이전 피드백 확인</button>
+  </form>
 </body>
 </html>

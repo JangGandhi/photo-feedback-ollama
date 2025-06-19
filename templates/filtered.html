@@ -1,0 +1,39 @@
+=<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>필터 적용 결과</title>
+  <style>
+    body { font-family: sans-serif; }
+    .image-compare {
+      display: flex;
+      gap: 40px;
+      margin-top: 20px;
+    }
+    .image-block {
+      text-align: center;
+    }
+    img {
+      max-width: 400px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎨 필터 적용 결과 ({{ filter_name }})</h2>
+
+  <div class="image-compare">
+    <div class="image-block">
+      <h3>원본 이미지</h3>
+      <img src="{{ original_path }}" alt="원본 이미지">
+    </div>
+    <div class="image-block">
+      <h3>필터 적용 이미지</h3>
+      <img src="{{ image_path }}" alt="필터 이미지">
+    </div>
+  </div>
+
+  <br><br>
+  <a href="/">🔙 처음으로 돌아가기</a>
+</body>
+</html>

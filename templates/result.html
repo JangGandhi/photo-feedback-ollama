@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>AI 피드백 결과</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .feedback-box {
+      white-space: pre-wrap;
+      border: 1px solid #ccc;
+      padding: 15px;
+      max-width: 700px;
+      line-height: 1.6;
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h2>📤 업로드한 사진</h2>
+  <img src="{{ image_path }}" style="max-width: 400px;"><br><br>
+
+  <h3>📄 AI 평가 피드백</h3>
+  <div class="feedback-box">
+    {{ feedback }}
+  </div>
+
+  <h3>🎨 추천 필터: {{ filter_name }}</h3>
+  <p>{{ reason }}</p>
+
+  <form action="/apply_filter" method="post">
+    <button type="submit">🎨 추천 필터 적용하기</button>
+  </form>
+</body>
+</html>
