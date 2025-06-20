@@ -14,11 +14,11 @@
       background-position: center;
       background-repeat: no-repeat;
     }
-    .feedback-box {
+    .main-feedback-box {
         white-space: pre-wrap;
         border: 1px solid rgba(255, 255, 255, 0.4);
         padding: 20px;
-        max-width: 700px;
+        margin-bottom: 10px;
         line-height: 1.6;
         background-color: rgba(255, 255, 255, 0.2);
         color: #fff;
@@ -26,15 +26,64 @@
         backdrop-filter: blur(6px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
+    .sub-feedback-box {
+        white-space: pre-wrap;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 20px;
+        line-height: 1.6;
+        width: calc((100% - 20px) / 3);
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 12px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .main-feedback-box > :first-child {
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .main-feedback-box > :nth-child(2) {
+      font-size: 24px;
+    }
+    .sub-feedback-box > :first-child {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .sub-feedback-box > :nth-child(2) {
+      font-size: 22px;
+    }
+    .main-feedback-box .sub-feedback-box > :nth-child(3) {
+      font-size: 20px;
+    }
+
   </style>
 </head>
 <body>
   <h2>업로드한 사진</h2>
-  <img src="{{ image_path }}" style="max-width: 400px;"><br><br>
+  <img src="{{ image_path }}" style="max-width: 100%"><br><br>
 
   <h3>AI 평가 피드백</h3>
-  <div class="feedback-box">
-    {{ feedback }}
+  <div class="main-feedback-box">
+    <div style="text-align: center;" >전체적인 감상평</div>
+    <div>{{ feedback.overall_grade }}</div>
+    <div>{{ feedback.overall_feedback }}</div>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <div class="sub-feedback-box">
+      <div style="text-align: center;" >셔터 속도</div>
+      <div>{{ feedback.shutter_speed_score }}/10</div>
+      <div>{{ feedback.shutter_speed_comment }}</div>
+    </div>
+    <div class="sub-feedback-box">
+      <div style="text-align: center;" >조리개 값</div>
+      <div>{{ feedback.aperture_score }}/10</div>
+      <div>{{ feedback.aperture_comment }}</div>
+    </div>
+    <div class="sub-feedback-box">
+      <div style="text-align: center;" >ISO</div>
+      <div>{{ feedback.iso_score }}/10</div>
+      <div>{{ feedback.iso_comment }}</div>
+    </div>
   </div>
 
   <h3>추천 필터: {{ filter_name }}</h3>
