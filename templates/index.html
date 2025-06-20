@@ -74,10 +74,11 @@
     <div class="overlay">
       <h1>사진 피드백 시스템</h1>
 
+      <!-- 사진 업로드 form -->
       <form id="upload-form" action="/evaluate" method="post" enctype="multipart/form-data">
         <div class="upload-row">
           <label class="custom-file-upload">
-            사진 선택하기
+            <span id="upload-label">사진 선택하기</span>
             <input id="file-upload" type="file" name="image" accept="image/*" required>
           </label>
           <div id="drop-box" class="drop-box">또는<br>여기로 드래그</div>
@@ -85,11 +86,12 @@
         <button type="submit" class="button">사진 업로드 및 평가</button>
       </form>
 
+      <!-- 이전 피드백 확인 버튼 -->
       <form action="/history" method="get">
         <button class="button" style="margin-top: 10px;">이전 피드백 확인</button>
       </form>
 
-      <!-- 로그기록 초기화 버튼 추가 -->
+      <!-- 로그기록 초기화 버튼 -->
       <form action="/reset_logs" method="post" onsubmit="return confirm('정말 모든 로그를 초기화하시겠습니까?');">
         <button type="submit" class="button" style="background-color:#e53935; margin-top:10px;">로그기록 초기화</button>
       </form>
@@ -97,8 +99,15 @@
   </div>
 
   <script>
+    const uploadLabel = document.getElementById('upload-label');
+    const fileUpload = document.getElementById('file-upload');
     const dropBox = document.getElementById('drop-box');
-    const fileInput = document.getElementById('file-upload');
+
+    fileUpload.addEventListener("change", () => {
+      if (fileUpload.files.length > 0) {
+        uploadLabel.textContent = "업로드 준비됨";
+      }
+    });
 
     dropBox.addEventListener('dragover', (e) => {
       e.preventDefault();
@@ -116,7 +125,7 @@
 
       const files = e.dataTransfer.files;
       if (files.length > 0) {
-        fileInput.files = files;
+        fileUpload.files = files;
         const fileName = files[0].name;
         dropBox.innerHTML = `${fileName}<br>업로드 준비됨`;
       }
