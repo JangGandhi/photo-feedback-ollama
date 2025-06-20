@@ -1,39 +1,87 @@
-=<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <title>필터 적용 결과</title>
   <style>
-    body { font-family: sans-serif; }
-    .image-compare {
-      display: flex;
-      gap: 40px;
-      margin-top: 20px;
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      color: #fff;
+      background-image: url("../static/background4.jpg"); /* 배경 이미지 */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
     }
-    .image-block {
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      min-height: 100vh;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    h2, h3 {
       text-align: center;
     }
+
+    .image-compare {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .image-block {
+      background-color: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      color: #fff;
+    }
+
     img {
-      max-width: 400px;
-      border: 1px solid #ccc;
+      max-width: 300px;
+      border-radius: 8px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 50px;
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h2>필터 적용 결과 ({{ filter_name }})</h2>
+  <div class="overlay">
+    <h2>필터 적용 결과 ({{ filter_name }})</h2>
 
-  <div class="image-compare">
-    <div class="image-block">
-      <h3>원본 이미지</h3>
-      <img src="{{ original_path }}" alt="원본 이미지">
+    <div class="image-compare">
+      <div class="image-block">
+        <h3>원본 이미지</h3>
+        <img src="{{ original_path }}" alt="원본 이미지">
+      </div>
+      <div class="image-block">
+        <h3>필터 적용 이미지</h3>
+        <img src="{{ image_path }}" alt="필터 이미지">
+      </div>
     </div>
-    <div class="image-block">
-      <h3>필터 적용 이미지</h3>
-      <img src="{{ image_path }}" alt="필터 이미지">
-    </div>
+
+    <a href="/">← 처음으로 돌아가기</a>
   </div>
-
-  <br><br>
-  <a href="/">처음으로 돌아가기</a>
 </body>
 </html>
