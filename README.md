@@ -35,39 +35,49 @@ http://localhost:5000
 
 ## 프로젝트 폴더 구조 예시
 
-project/
-
-├── app.py                     # 메인 Flask 서버 파일
-
-├── static/uploads/            # 업로드 및 필터 이미지 저장 폴더
-
-├── templates/
-
-│   ├── index.html             # 메인 업로드 페이지
-
-│   ├── result.html            # AI 피드백 결과 페이지
-
-│   ├── filtered.html          # 필터 적용 결과 페이지
-
-│   └── history.html           # 과거 피드백 기록 페이지
+├── app.py # 메인 Flask 서버 파일
 
 ├── log/
 
-│   ├── feedback_log.txt       # 최근 AI 피드백 로그
+│ ├── feedback_log.txt # AI 피드백 로그 기록 파일
 
-│   └── history.json
+│ └── history.json # 업로드/피드백 히스토리 저장 파일
+
+├── static/
+
+│ ├── uploads/ # 사용자가 업로드한 원본/필터 사진 저장 폴더
+
+│ └── css/
+
+│ └── style.css # 추가 스타일시트 파일
+
+├── templates/
+
+│ ├── index.html # 메인 페이지(사진 업로드/초기화 등)
+
+│ ├── result.html # 평가 결과 페이지
+
+│ ├── history.html # 피드백 히스토리(타임라인) 페이지
+
+│ ├── filtered.html # 필터 적용 결과 페이지
+
+│ └── detail.html # 사진/피드백 상세 보기 페이지
+
+└── README.md # 프로젝트 설명 파일(이 문서)
 
 ## 사용 방법 
 
 사진을 업로드하고 "평가 받기" 버튼 클릭
 
-AI가 피드백을 JSON 형식으로 제공
+AI가 피드백 제공
 
 AI가 추천한 필터 내용을 확인
 
-"필터 적용하기" 버튼 클릭 시 해당 필터가 적용된 이미지를 원본과 함께 확인
+"필터 적용하기" 버튼 클릭 시 추천된 필터가 적용된 이미지를 원본과 함께 확인
 
 "이전 피드백 확인" 버튼을 통해 과거 분석 이력을 확인
+
+"로그기록 초기화" 버튼 클릭시 이전에 저장되어있던 피드백 로그 기록들을 초기화함
 
 ## 기타
 

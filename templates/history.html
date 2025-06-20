@@ -2,87 +2,131 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>이전 피드백 기록</title>
+  <title>히스토리</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      color: #fff;
-      background-image: url("../static/background3.jpg");
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
+    body {
+      background-color: #121212;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 60px 20px;
     }
 
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.5);
-      min-height: 100vh;
-      height: 100%;
-      padding: 40px;
-      box-sizing: border-box;
-    }
-
-    h2 {
+    h1 {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
 
-    ul {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 0;
-      list-style: none;
-    }
-
-    li {
-        background-color: rgba(255, 255, 255, 0.15);
-        color: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        backdrop-filter: blur(6px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-    }
-
-    pre {
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-
-    a {
-      display: block;
-      text-align: center;
-      margin-top: 40px;
+    .back-link {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #4caf50;
       text-decoration: none;
-      color: #fff;
       font-weight: bold;
     }
 
-    a:hover {
-      text-decoration: underline;
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .timeline-item {
+      display: flex;
+      flex-direction: row;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .timeline-item:hover {
+      transform: scale(1.01);
+    }
+
+    .timeline-image {
+      flex: 0 0 280px;
+      height: 180px;
+    }
+
+    .timeline-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .timeline-content {
+      flex: 1;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .timeline-content h3 {
+      margin: 0;
+      color: #4caf50;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-content pre {
+      white-space: pre-wrap;
+      background: #1a1a1a;
+      padding: 12px;
+      border-radius: 6px;
+      color: #ccc;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .delete-form {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .delete-form button {
+      background-color: #e53935;
+      border: none;
+      padding: 6px 12px;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="overlay">
-    <h2>이전 사진 피드백 기록</h2>
-    {% if entries %}
-      <ul>
-        {% for entry in entries %}
-          <li>
-            <strong>{{ entry.timestamp }}</strong><br>
-            <pre>{{ entry.feedback }}</pre>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p style="text-align:center;">기록된 피드백이 없습니다.</p>
+
+<a href="/" class="back-link">← 메인으로</a>
+
+<h1>이전 피드백</h1>
+
+<div class="timeline">
+  {% for entry in entries %}
+    {% if not entry.filename.startswith('filtered_') %}
+    <div class="timeline-item">
+      <div class="timeline-image">
+        <a href="{{ url_for('detail', filename=entry.filename) }}">
+          <img src="{{ url_for('static', filename='uploads/' + entry.filename) }}" alt="분석 이미지">
+        </a>
+      </div>
+
+      <div class="timeline-content">
+        <h3>{{ entry.timestamp[:10] }}</h3>
+        <pre>{{ entry.feedback }}</pre>
+
+        <form class="delete-form" action="{{ url_for('delete_history', filename=entry.filename) }}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit">삭제</button>
+        </form>
+      </div>
+    </div>
     {% endif %}
-    <a href="/">← 돌아가기</a>
-  </div>
+  {% endfor %}
+</div>
+
 </body>
 </html>

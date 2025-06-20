@@ -1,4 +1,4 @@
-# 통합 서버: 업로드 → AI 피드백 → 필터 추천 → 필터 적용 → 이전 피드백 확인
+# 통합 서버: 업로드 → AI 피드백 → 필터 추천 → 필터 적용 → 이전 피드백 확인 + 로그기록 초기화
 from flask import Flask, request, render_template, redirect, url_for
 import os
 import requests
@@ -25,7 +25,6 @@ FILTER_MAP = {
     "SMOOTH": ImageFilter.SMOOTH
 }
 
-# 상태 저장 변수
 CURRENT_FILENAME = None
 CURRENT_FILTER = None
 
@@ -57,7 +56,6 @@ def evaluate():
     if not file:
         return redirect(url_for('index'))
 
-    # 파일 저장
     filename = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_") + secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
@@ -70,35 +68,32 @@ def evaluate():
         사용자는 이전에 너로부터 피드백을 받았고, 그 피드백을 반영하여 새롭게 사진을 촬영한 상황.
         이전 피드백: {previous_feedback}
         이번 응답의 목적은 업로드된 새로운 사진을 바탕으로, 이전 피드백과 비교해 어떤 부분이 개선되었는지, 그리고 여전히 보완이 필요한 부분이 무엇인지 평가하는 것.
-        아래의 형식에 맞춰 반드시 한글로 답변하세요.  
-        각 항목을 모두 빠짐없이 채우고, 출력 전에 어색한 부분이 없는지 한 번 더 검토하여 자연스럽게 수정하세요.
+        만약 개선된 부분이 없다면, 그 사실도 솔직하고 냉정하게 판단하여 서술할 것.
 
-        총점 :  
-        조리개 :  
-        iso :  
-        셔터속도 :  
-
-        - 총점 항목에는 S ~ D 사이의 등급 중 하나만 기재하세요.
-        - 조리개, iso, 셔터속도 항목에는 맨 앞에 0~10점 사이의 점수를 적고, 점수 옆에 사진에 대한 느낌점과 개선점을 자연스럽게 이어서 적으세요.
-        - 모든 항목은 빠짐없이 작성하고, 반드시 한글로 출력하세요.
-        - 항목 이름이나 순서는 절대 바꾸지 말고, 다른 설명이나 인사말은 절대 추가하지 마세요.
+        반드시 한글로 응답할 것.
+        반드시 다음 형식에 맞춰 응답할 것: {{
+        총점 : "S ~ D 사이의 등급에서 점수를 매길것"
+        조리개 : "점수" "느낀점 밑 개선점"
+        iso : "점수" "느낀점 밑 개선점"
+        셔터속도 : "점수" "느낀점 밑 개선점"
+        }}
+        절대로 항목을 섞지 말것.
+        모든 항목을 채울 것.
+        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
         """
     else:
         prompt = f"""
-        아래의 형식에 맞춰 반드시 한글로 답변하세요.  
-        각 항목을 모두 빠짐없이 채우고, 출력 전에 어색한 부분이 없는지 한 번 더 검토하여 자연스럽게 수정하세요.
-
-        총점 :  
-        조리개 :  
-        iso :  
-        셔터속도 :  
-
-        - 총점 항목에는 S ~ D 사이의 등급 중 하나만 기재하세요.
-        - 조리개, iso, 셔터속도 항목에는 맨 앞에 0~10점 사이의 점수를 적고, 점수 옆에 사진에 대한 느낌점과 개선점을 자연스럽게 이어서 적으세요.
-        - 모든 항목은 빠짐없이 작성하고, 반드시 한글로 출력하세요.
-        - 항목 이름이나 순서는 절대 바꾸지 말고, 다른 설명이나 인사말은 절대 추가하지 마세요.
+        반드시 한글로 응답할 것.
+        반드시 다음 형식에 맞춰 응답할 것: {{
+        총점 : "S ~ D 사이의 등급에서 점수를 매길것"
+        조리개 : "점수" "느낀점 밑 개선점"
+        iso : "점수" "느낀점 밑 개선점"
+        셔터속도 : "점수" "느낀점 밑 개선점"
+        }}
+        절대로 항목을 섞지 말것.
+        모든 항목을 채울 것.
+        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
         """
-
 
     feedback = get_llava_response(filepath, prompt)
     with open(LOG_FILE, 'w', encoding='utf-8') as f:
@@ -116,7 +111,6 @@ def evaluate():
 }
 """
     analysis = get_llava_response(filepath, filter_prompt)
-
     recommended = None
     reason = "없음"
     try:
@@ -131,13 +125,11 @@ def evaluate():
         pass
     CURRENT_FILTER = recommended
 
-
     return render_template('result.html', image_path=filepath, feedback=feedback,
                            filter_name=CURRENT_FILTER, reason=reason)
 
 @app.route('/apply_filter', methods=['POST'])
 def apply_filter():
-
     global CURRENT_FILENAME, CURRENT_FILTER
     if not CURRENT_FILENAME or not CURRENT_FILTER:
         return redirect(url_for('index'))
@@ -176,6 +168,50 @@ def history():
     entries = load_history()
     entries.sort(key=lambda x: x['timestamp'], reverse=True)
     return render_template('history.html', entries=entries)
+
+@app.route('/detail/<filename>')
+def detail(filename):
+    entries = load_history()
+    entry = next((e for e in entries if e['filename'] == filename), None)
+    if not entry:
+        return "해당 피드백이 존재하지 않습니다.", 404
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    return render_template('detail.html', image_path=image_path, feedback=entry['feedback'], timestamp=entry['timestamp'])
+
+@app.route('/delete_history/<filename>', methods=['POST'])
+def delete_history(filename):
+    entries = load_history()
+    entries = [e for e in entries if e['filename'] != filename]
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(entries, f, ensure_ascii=False, indent=2)
+    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    try:
+        if os.path.exists(image_path):
+            os.remove(image_path)
+    except Exception:
+        pass
+    return redirect(url_for('history'))
+
+@app.route('/reset_logs', methods=['POST'])
+def reset_logs():
+    # 피드백 로그 파일 삭제
+    try:
+        if os.path.exists(LOG_FILE):
+            os.remove(LOG_FILE)
+    except Exception:
+        pass
+    # 히스토리 로그 파일 삭제
+    try:
+        if os.path.exists(HISTORY_FILE):
+            os.remove(HISTORY_FILE)
+    except Exception:
+        pass
+    # 업로드된 이미지 폴더의 모든 파일 삭제(필요시 주석 해제)
+    # for filename in os.listdir(UPLOAD_FOLDER):
+    #     path = os.path.join(UPLOAD_FOLDER, filename)
+    #     if os.path.isfile(path):
+    #         os.remove(path)
+    return redirect(url_for('index'))
 
 def get_llava_response(image_path, prompt):
     with open(image_path, 'rb') as f:
