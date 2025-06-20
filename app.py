@@ -46,43 +46,48 @@ def evaluate():
     file.save(filepath)
     CURRENT_FILENAME = filename
 
-    # 평가 프롬프트 (변경 금지)
+    # 평가 프롬프트
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, 'r', encoding='utf-8') as f:
             previous_feedback = f.read()
-        prompt = f"""사용자는 이전에 너로부터 피드백을 받았고, 그 피드백을 반영하여 새롭게 사진을 촬영환 상황.
-이전 피드백: {previous_feedback}
-이번 응답의 목적은 업로드된 새로운 사진을 바탕으로, 이전 사진과 비교해 어떤 부분이 개선되었는지, 그리고 여전히 보완이 필요한 부분이 무엇인지 평가하는 것.
-만약 개선된 부분이 없다면, 그 사실도 솔직하고 냉정하게 판단하여 서술할 것.
-대괄호([]) 안에 있는 문장들은 예시 또는 설명이므로, 응답 생성 시 반드시 제외하고 출력할 것.
-아래 json 형식으로 응답할 때 반드시 한글로 응답해줘.
-반드시 아래 JSON 형식에 맞춰 응답할 것:
+        prompt = f"""
+        사용자는 이전에 너로부터 피드백을 받았고, 그 피드백을 반영하여 새롭게 사진을 촬영한 상황.
+        이전 피드백: {previous_feedback}
+        이번 응답의 목적은 업로드된 새로운 사진을 바탕으로, 이전 피드백과 비교해 어떤 부분이 개선되었는지, 그리고 여전히 보완이 필요한 부분이 무엇인지 평가하는 것.
+        만약 개선된 부분이 없다면, 그 사실도 솔직하고 냉정하게 판단하여 서술할 것.
 
-{{
-  "overall_grade": "",
-  "overall_feedback": "",
-  "shutter_speed_score": "",
-  "shutter_speed_comment": "",
-  "aperture_score": "",
-  "aperture_comment": "",
-  "iso_score": "",
-  "iso_comment": ""
-}}"""
+        반드시 한글로 응답할 것.
+        반드시 다음 JSON 형식에 맞춰 응답할 것: {{
+        "overall_grade": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D"
+        "overall_feedback": "사용자가 올린 사진이 어떤 내용인지 분석하고 이에 대한 감상평을 작성할 것. 셔터 속도, 조리개 값, ISO는 절대 언급하지 말 것."
+        "shutter_speed_score": "셔터 속도만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "shutter_speed_comment": "셔터 속도만을 기준으로 평가하고 설명할 것. 조리개 값, ISO는 절대 언급하지 말 것."
+        "aperture_score": "조리개 값만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "aperture_comment": "조리개 값만을 기준으로 평가하고 설명할 것. 셔터 속도, ISO는 절대 언급하지 말 것."
+        "iso_score": "ISO만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "iso_comment": "ISO만을 기준으로 평가하고 설명할 것. 셔터 속도, 조리개 값은 절대 언급하지 말 것."
+        }}
+        절대로 항목을 섞지 말것.
+        모든 항목을 채울 것.
+        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
+        """
     else:
-        prompt = """아래 json 형식으로 응답할 때 반드시 한글로 응답해줘.
-대괄호([]) 안에 있는 문장들은 예시 또는 설명이므로, 응답 생성 시 반드시 제외하고 출력할 것.
-반드시 아래 JSON 형식에 맞춰 응답할 것:
-
-{
-  "overall_grade": "",
-  "overall_feedback": "",
-  "shutter_speed_score": "",
-  "shutter_speed_comment": "",
-  "aperture_score": "",
-  "aperture_comment": "",
-  "iso_score": "",
-  "iso_comment": ""
-}"""
+        prompt = f"""
+        반드시 한글로 응답할 것.
+        반드시 다음 JSON 형식에 맞춰 응답할 것: {{
+        "overall_grade": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D"
+        "overall_feedback": "사용자가 올린 사진이 어떤 내용인지 분석하고 이에 대한 감상평을 작성할 것. 셔터 속도, 조리개 값, ISO는 절대 언급하지 말 것."
+        "shutter_speed_score": "셔터 속도만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "shutter_speed_comment": "셔터 속도만을 기준으로 평가하고 설명할 것. 조리개 값, ISO는 절대 언급하지 말 것."
+        "aperture_score": "조리개 값만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "aperture_comment": "조리개 값만을 기준으로 평가하고 설명할 것. 셔터 속도, ISO는 절대 언급하지 말 것."
+        "iso_score": "ISO만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "iso_comment": "ISO만을 기준으로 평가하고 설명할 것. 셔터 속도, 조리개 값은 절대 언급하지 말 것."
+        }}
+        절대로 항목을 섞지 말것.
+        모든 항목을 채울 것.
+        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
+        """
 
     # 피드백 요청
     feedback = analyze_with_llava(filepath, prompt)
