@@ -158,7 +158,7 @@ def analyze_with_llava(image_path, prompt):
         encoded_image = base64.b64encode(f.read()).decode('utf-8')
 
     response = requests.post(
-        "http://localhost:11434/api/generate",
+        "http://192.168.219.107:11434/api/generate",
         json={
             "model": "llava",
             "prompt": prompt,
