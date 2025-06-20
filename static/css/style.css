@@ -85,3 +85,38 @@ button.secondary {
 .custom-file-upload:hover {
   background-color: rgba(255, 255, 255, 0.25);
 }
+.feedback-container {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  max-width: 800px;
+  width: 90%;
+  backdrop-filter: blur(8px);
+  text-align: left;
+}
+
+.feedback-container h2,
+.feedback-container h3,
+.feedback-container p {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.photo-preview {
+  max-width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.feedback-box {
+  background-color: rgba(255, 255, 255, 0.85);
+  color: #333;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  margin-bottom: 24px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}

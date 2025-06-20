@@ -3,22 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <title>이전 피드백 기록</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+      color: #fff;
+      background-image: url("../static/background3.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5); /* 반투명 어두운 배경 */
+      min-height: 100%;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    ul {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0;
+      list-style: none;
+    }
+
+    li {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 40px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h2>이전 사진 피드백 기록</h2>
-  {% if entries %}
-    <ul>
-      {% for entry in entries %}
-        <li>
-          <strong>{{ entry.timestamp }}</strong><br>
-          <pre>{{ entry.feedback }}</pre>
-          <hr>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>기록된 피드백이 없습니다.</p>
-  {% endif %}
-  <a href="/">돌아가기</a>
+  <div class="overlay">
+    <h2>이전 사진 피드백 기록</h2>
+    {% if entries %}
+      <ul>
+        {% for entry in entries %}
+          <li>
+            <strong>{{ entry.timestamp }}</strong><br>
+            <pre>{{ entry.feedback }}</pre>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="text-align:center;">기록된 피드백이 없습니다.</p>
+    {% endif %}
+    <a href="/">← 돌아가기</a>
+  </div>
 </body>
 </html>
