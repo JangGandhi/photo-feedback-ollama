@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>상세 피드백</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .back-links {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+    }
+
+    .image-block {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      margin-top: 60px;
+    }
+
+    .image-block img {
+      max-width: 500px;
+      border: 3px solid #555;
+      border-radius: 10px;
+    }
+
+    .image-block p {
+      text-align: center;
+      font-size: 14px;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+    .feedback-block {
+      margin-top: 30px;
+    }
+
+    .feedback-block pre {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+
+    .meta {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="back-links">
+    <a href="/" style="color: #2ab4d7;">← 메인으로</a> |
+    <a href="/history" style="color: #4caf50;">히스토리</a>
+  </div>
+
+  <h2>사진 분석 결과</h2>
+
+  <div class="image-block">
+    <!-- 원본 이미지 -->
+    <div>
+      <img src="{{ url_for('static', filename='uploads/' + entry.filename) }}" alt="원본 이미지">
+      <p>원본 이미지</p>
+    </div>
+
+    <!-- 필터 이미지가 있으면 표시 -->
+    {% set parts = entry.filename.rsplit('.', 1) %}
+    {% set filtered_name = 'filtered_' + entry.filename %}
+    {% if filtered_name in existing_files %}
+    <div>
+      <img src="{{ url_for('static', filename='uploads/' + filtered_name) }}" alt="필터 이미지">
+      <p>필터 적용 이미지</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="feedback-block">
+    <div class="meta">
+      <p><strong>파일명:</strong> {{ entry.filename }}</p>
+      <p><strong>날짜:</strong> {{ entry.timestamp[:10] }}</p>
+    </div>
+
+    <h4>AI 피드백</h4>
+    <pre>{{ entry.feedback_pretty }}</pre>
+  </div>
+
+</body>
+</html>
