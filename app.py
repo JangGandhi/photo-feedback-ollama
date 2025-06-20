@@ -5,9 +5,8 @@ import requests
 import base64
 import json
 import datetime
-import re
 from werkzeug.utils import secure_filename
-from PIL import Image, ImageFilter, ImageEnhance
+from PIL import Image, ImageFilter, ImageEnhance, ExifTags
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
@@ -29,6 +28,23 @@ FILTER_MAP = {
 # 상태 저장 변수
 CURRENT_FILENAME = None
 CURRENT_FILTER = None
+
+def fix_image_orientation(image):
+    try:
+        exif = image._getexif()
+        if exif is not None:
+            orientation_key = [k for k, v in ExifTags.TAGS.items() if v == "Orientation"]
+            if orientation_key:
+                orientation = exif.get(orientation_key[0])
+                if orientation == 3:
+                    image = image.rotate(180, expand=True)
+                elif orientation == 6:
+                    image = image.rotate(270, expand=True)
+                elif orientation == 8:
+                    image = image.rotate(90, expand=True)
+    except Exception:
+        pass
+    return image
 
 @app.route('/')
 def index():
@@ -71,7 +87,6 @@ def evaluate():
         절대로 항목을 섞지 말것.
         모든 항목을 채울 것.
         문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
-        JSON 외의 설명, 인사말, 기타 문장은 절대 출력하지 말것.
         """
     else:
         prompt = f"""
@@ -89,7 +104,6 @@ def evaluate():
         절대로 항목을 섞지 말것.
         모든 항목을 채울 것.
         문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
-        JSON 외의 설명, 인사말, 기타 문장은 절대 출력하지 말것.
         """
 
     # 피드백 요청
@@ -130,6 +144,7 @@ def apply_filter():
 
     try:
         img = Image.open(original_path)
+        img = fix_image_orientation(img)   # ← 방향 보정 추가!
         if CURRENT_FILTER == "BLUR":
             filtered = img.filter(ImageFilter.GaussianBlur(radius=8))
         elif CURRENT_FILTER == "SHARPEN":
@@ -156,9 +171,8 @@ def history():
     entries.sort(key=lambda x: x['timestamp'], reverse=True)
     return render_template('history.html', entries=entries)
 
-import re  # <- 파일 맨 위에 이미 import 되어 있으면 생략
-
 def analyze_with_llava(image_path, prompt):
+    import re
     with open(image_path, 'rb') as f:
         encoded_image = base64.b64encode(f.read()).decode('utf-8')
 
@@ -186,27 +200,19 @@ def analyze_with_llava(image_path, prompt):
         json_start = full_text.find("{")
         json_end = full_text.rfind("}") + 1
         json_str = full_text[json_start:json_end]
-
-        # 1. 0x00~0x1F 범위 제어문자 제거
+        # escape 관련 문제 자동 처리(아래 두 줄)
         json_str = re.sub(r"[\x00-\x1F]+", "", json_str)
-
-        # 2. 역슬래시가 잘못 들어간 부분 자동 escape
-        # (유효한 escape만 허용, 나머지는 모두 \\로 변환)
         def fix_escape(m):
             s = m.group()
-            # JSON에서 허용되는 escape
             if s in ['\\\"', '\\\\', '\\/', '\\b', '\\f', '\\n', '\\r', '\\t']:
                 return s
             return '\\\\' + s[1:]
-
         json_str = re.sub(r'\\.', fix_escape, json_str)
-
         return json.loads(json_str)
     except Exception as e:
         print("LLaVA 응답 파싱 실패:", e)
         print("응답 원문:\n", full_text)
         return {"error": "파싱 실패", "raw_response": full_text}
-
 
 def save_history(filename, feedback):
     entry = {
