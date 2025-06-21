@@ -2,19 +2,23 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>상세 피드백</title>
+  <title>이전 피드백 상세</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #fff;
-      padding: 20px;
+      background-color: #121212;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 60px 20px;
     }
 
-    .back-links {
+    .history-link {
       position: absolute;
-      top: 15px;
+      top: 20px;
       left: 20px;
+      color: #4caf50;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 20px;
     }
 
     .image-block {
@@ -25,7 +29,7 @@
     }
 
     .image-block img {
-      max-width: 500px;
+      max-width: 1000px;
       border: 3px solid #555;
       border-radius: 10px;
     }
@@ -51,13 +55,53 @@
     .meta {
       margin-bottom: 15px;
     }
+
+    .score-summary {
+      display: flex;
+      justify-content: space-between;
+      background-color: #222;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 30px;
+      gap: 20px;
+    }
+
+    .score-box {
+      flex: 1;
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      padding: 15px;
+      padding-bottom: 40px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .score-box h4 {
+      color: #4caf50;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .score-box p {
+      font-size: 20px;
+      margin: 0;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .score-box .comment {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 10px;
+      font-weight: normal;
+    }
+
   </style>
 </head>
 <body>
 
-  <div class="back-links">
-    <a href="/" style="color: #2ab4d7;">← 메인으로</a> |
-    <a href="/history" style="color: #4caf50;">히스토리</a>
+  <div style="margin-bottom: 32px;">
+    <a href="/history" class="history-link">&lt;&nbsp;&nbsp;이전으로</a>
   </div>
 
   <h2>사진 분석 결과</h2>
@@ -70,7 +114,6 @@
     </div>
 
     <!-- 필터 이미지가 있으면 표시 -->
-    {% set parts = entry.filename.rsplit('.', 1) %}
     {% set filtered_name = 'filtered_' + entry.filename %}
     {% if filtered_name in existing_files %}
     <div>
@@ -86,9 +129,32 @@
       <p><strong>날짜:</strong> {{ entry.timestamp[:10] }}</p>
     </div>
 
-    <h4>AI 피드백</h4>
-    <pre>{{ entry.feedback_pretty }}</pre>
-  </div>
+    <!-- 점수 요약 -->
+    <div class="score-summary">
+      <div class="score-box">
+        <h4>셔터 속도</h4>
+        <p>{{ entry.feedback.shutter_speed_score }}</p>
+        <p class="comment">{{ entry.feedback.shutter_speed_comment }}</p>
+      </div>
+      <div class="score-box">
+        <h4>조리개</h4>
+        <p>{{ entry.feedback.aperture_score }}</p>
+        <p class="comment">{{ entry.feedback.aperture_comment }}</p>
+      </div>
+      <div class="score-box">
+        <h4>ISO</h4>
+        <p>{{ entry.feedback.iso_score }}</p>
+        <p class="comment">{{ entry.feedback.iso_comment }}</p>
+      </div>
+    </div>
+
+    <!-- AI 전체 피드백 -->
+<h4 style="margin-top: 40px;">Ollama의 전반적인 피드백</h4>
+<div style="background: #1e1e1e; padding: 15px; border-radius: 10px; line-height: 1.6;">
+  <p><strong>등급:</strong> {{ entry.feedback.overall_grade }}</p>
+  <p><strong>총평:</strong> {{ entry.feedback.overall_feedback }}</p>
+</div>
+
 
 </body>
 </html>
