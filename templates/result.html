@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>AI 피드백 결과</title>
+  <title>사진 피드백 결과</title>
   <style>
     body {
       min-height: 100vh;
@@ -13,6 +13,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      margin-bottom: 128px;
     }
     .main-feedback-box {
         white-space: pre-wrap;
@@ -38,22 +39,42 @@
         backdrop-filter: blur(6px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
-    .main-feedback-box > :first-child {
+    .main-name {
+      text-align: center;
       font-size: 28px;
       font-weight: bold;
     }
-    .main-feedback-box > :nth-child(2) {
-      font-size: 24px;
-    }
-    .sub-feedback-box > :first-child {
-      font-size: 24px;
+    .main-score {
+      text-align: center;
+      font-size: 64px;
       font-weight: bold;
     }
-    .sub-feedback-box > :nth-child(2) {
-      font-size: 22px;
+    .sub-name {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
     }
-    .main-feedback-box .sub-feedback-box > :nth-child(3) {
+    .sub-score {
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .comment {
       font-size: 20px;
+    }
+    .button {
+      padding: 10px 15px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-block;
+      transition: background-color 0.2s ease;
+    }
+    .button:hover {
+      background-color: #333;
     }
 
   </style>
@@ -64,25 +85,25 @@
 
   <h3>AI 평가 피드백</h3>
   <div class="main-feedback-box">
-    <div style="text-align: center;" >전체적인 감상평</div>
-    <div>{{ feedback.overall_grade }}</div>
-    <div>{{ feedback.overall_feedback }}</div>
+    <div class="main-name" >전체적인 감상평</div>
+    <div class="main-score">{{ feedback.overall_grade }}</div>
+    <div class="comment">{{ feedback.overall_feedback }}</div>
   </div>
   <div style="display: flex; gap: 10px;">
     <div class="sub-feedback-box">
-      <div style="text-align: center;" >셔터 속도</div>
-      <div>{{ feedback.shutter_speed_score }}/10</div>
-      <div>{{ feedback.shutter_speed_comment }}</div>
+      <div class="sub-name">셔터 속도</div>
+      <div class="sub-score">{{ feedback.shutter_speed_score }}</div>
+      <div class="comment">{{ feedback.shutter_speed_comment }}</div>
     </div>
     <div class="sub-feedback-box">
-      <div style="text-align: center;" >조리개 값</div>
-      <div>{{ feedback.aperture_score }}/10</div>
-      <div>{{ feedback.aperture_comment }}</div>
+      <div class="sub-name">조리개 값</div>
+      <div class="sub-score">{{ feedback.aperture_score }}</div>
+      <div class="comment">{{ feedback.aperture_comment }}</div>
     </div>
     <div class="sub-feedback-box">
-      <div style="text-align: center;" >ISO</div>
-      <div>{{ feedback.iso_score }}/10</div>
-      <div>{{ feedback.iso_comment }}</div>
+      <div class="sub-name">ISO</div>
+      <div class="sub-score">{{ feedback.iso_score }}</div>
+      <div class="comment">{{ feedback.iso_comment }}</div>
     </div>
   </div>
 
@@ -90,7 +111,7 @@
   <p>{{ reason }}</p>
 
   <form action="/apply_filter" method="post">
-    <button type="submit">추천 필터 적용하기</button>
+    <button class="button" type="submit">추천 필터 적용하기</button>
   </form>
 </body>
 </html>
