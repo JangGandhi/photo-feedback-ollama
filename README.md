@@ -77,6 +77,8 @@ http://localhost:5000
 ```
 
 ## 📹 Demo
+![Image](https://github.com/user-attachments/assets/08999833-53e5-4ae3-886f-45ca6688169b)
+
 ### 🪐 메인페이지
 ![Image](https://github.com/user-attachments/assets/75e83ec7-20c9-48b0-97ad-0ed424c6cbae)
 
