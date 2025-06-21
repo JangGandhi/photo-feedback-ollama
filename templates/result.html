@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>AI 피드백 결과</title>
+  <title>사진 피드백 결과</title>
   <style>
     body {
       min-height: 100vh;
@@ -13,12 +13,13 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      margin-bottom: 128px;
     }
-    .feedback-box {
+    .main-feedback-box {
         white-space: pre-wrap;
         border: 1px solid rgba(255, 255, 255, 0.4);
         padding: 20px;
-        max-width: 700px;
+        margin-bottom: 10px;
         line-height: 1.6;
         background-color: rgba(255, 255, 255, 0.2);
         color: #fff;
@@ -26,22 +27,91 @@
         backdrop-filter: blur(6px);
         box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
+    .sub-feedback-box {
+        white-space: pre-wrap;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        padding: 20px;
+        line-height: 1.6;
+        width: calc((100% - 20px) / 3);
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border-radius: 12px;
+        backdrop-filter: blur(6px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .main-name {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .main-score {
+      text-align: center;
+      font-size: 64px;
+      font-weight: bold;
+    }
+    .sub-name {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .sub-score {
+      text-align: center;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .comment {
+      font-size: 20px;
+    }
+    .button {
+      padding: 10px 15px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      display: inline-block;
+      transition: background-color 0.2s ease;
+    }
+    .button:hover {
+      background-color: #333;
+    }
+
   </style>
 </head>
 <body>
   <h2>업로드한 사진</h2>
-  <img src="{{ image_path }}" style="max-width: 400px;"><br><br>
+  <img src="{{ image_path }}" style="max-width: 100%"><br><br>
 
   <h3>AI 평가 피드백</h3>
-  <div class="feedback-box">
-    {{ feedback }}
+  <div class="main-feedback-box">
+    <div class="main-name" >전체적인 감상평</div>
+    <div class="main-score">{{ feedback.overall_grade }}</div>
+    <div class="comment">{{ feedback.overall_feedback }}</div>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <div class="sub-feedback-box">
+      <div class="sub-name">셔터 속도</div>
+      <div class="sub-score">{{ feedback.shutter_speed_score }}</div>
+      <div class="comment">{{ feedback.shutter_speed_comment }}</div>
+    </div>
+    <div class="sub-feedback-box">
+      <div class="sub-name">조리개 값</div>
+      <div class="sub-score">{{ feedback.aperture_score }}</div>
+      <div class="comment">{{ feedback.aperture_comment }}</div>
+    </div>
+    <div class="sub-feedback-box">
+      <div class="sub-name">ISO</div>
+      <div class="sub-score">{{ feedback.iso_score }}</div>
+      <div class="comment">{{ feedback.iso_comment }}</div>
+    </div>
   </div>
 
   <h3>추천 필터: {{ filter_name }}</h3>
   <p>{{ reason }}</p>
 
   <form action="/apply_filter" method="post">
-    <button type="submit">추천 필터 적용하기</button>
+    <button class="button" type="submit">추천 필터 적용하기</button>
   </form>
 </body>
 </html>
