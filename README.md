@@ -4,12 +4,13 @@
 사진의 점수 및 개선점을 피드백하고, 이전 사진과 비교 평가까지 해주는 웹 서비스입니다.
 
 ---
+## 🚀 How to Start
 
-## 1. Python 라이브러리 설치
+### 1. Python 라이브러리 설치
 
 pip install flask requests pillow
 
-## 2. Ollama 설치 및 모델 준비
+### 2. Ollama 설치 및 모델 준비
 
 Ollama 설치
 https://ollama.com/download 에서 운영체제에 맞는 설치파일을 다운로드하여 설치하세요.
@@ -19,14 +20,14 @@ https://ollama.com/download 에서 운영체제에 맞는 설치파일을 다운
 ollama pull llava
 
 
-## 3. Ollama 서버 실행 명령어
+### 3. Ollama 서버 실행 명령어
 
 ollama run llava
 
 위 명령어를 입력하면 LLaVA 모델이 로컬에서 실행되고,
 Flask는 이 서버에 이미지를 전달하여 AI 피드백을 받아옵니다.
 
-## 4. Flask 서버 실행 명령어
+### 4. Flask 서버 실행 명령어
 
 python app.py
 
