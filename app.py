@@ -207,11 +207,13 @@ def load_history():
 @app.route('/detail/<filename>')
 def detail(filename):
     entries = load_history()
-    entry = next((e for e in entries if e['filename'] == filename), None)
-    if not entry:
-        return "해당 피드백이 존재하지 않습니다.", 404
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    return render_template('detail.html', image_path=image_path, feedback=entry['feedback'], timestamp=entry['timestamp'])
+    for entry in entries:
+        if entry['filename'] == filename:
+            entry['feedback_pretty'] = json.dumps(entry['feedback'], ensure_ascii=False, indent=2)
+            existing_files = os.listdir(app.config['UPLOAD_FOLDER'])
+            return render_template('detail.html', entry=entry, existing_files=existing_files)
+    
+    return "분석 기록이 없습니다.", 404
 
 @app.route('/delete_history/<filename>', methods=['POST'])
 def delete_history(filename):
