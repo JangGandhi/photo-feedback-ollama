@@ -83,7 +83,7 @@ http://localhost:5000
 ### 🪐 사진 피드백 페이지
 ![Image](https://github.com/user-attachments/assets/9bd8e3ba-9f55-455b-945d-9456da44adc0)
 
-![Image](https://github.com/user-attachments/assets/626f4b45-a9e1-4f2e-a071-daada903afa1)
+![Image](https://github.com/user-attachments/assets/9bd4d00b-1206-4ca4-aef9-d69c777c013b)
 
 ### 🪐 이미지 필터 적용 결과 페이지
 ![Image](https://github.com/user-attachments/assets/ad77a94c-1d17-4e8a-8d72-beab2f3efd95)
