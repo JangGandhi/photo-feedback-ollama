@@ -8,7 +8,9 @@
 
 ### 1. Python 라이브러리 설치
 
+```
 pip install flask requests pillow
+```
 
 ### 2. Ollama 설치 및 모델 준비
 
@@ -17,22 +19,29 @@ https://ollama.com/download 에서 운영체제에 맞는 설치파일을 다운
 
 ### LLaVA 모델 설치 명령어
 
+```
 ollama pull llava
-
+```
 
 ### 3. Ollama 서버 실행 명령어
 
+```
 ollama run llava
+```
 
 위 명령어를 입력하면 LLaVA 모델이 로컬에서 실행되고,
 Flask는 이 서버에 이미지를 전달하여 AI 피드백을 받아옵니다.
 
 ### 4. Flask 서버 실행 명령어
 
+```
 python app.py
+```
 
 웹 브라우저에서 아래 주소로 접속하세요:
+```
 http://localhost:5000
+```
 
 ## 프로젝트 폴더 구조 예시
 
