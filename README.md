@@ -70,6 +70,17 @@ http://localhost:5000
 
 ---
 
+## 💡 Tech stack 
+<br>
+<div align =center>
+
+분야| 사용 기술|
+:--------:|:------------------------------:|
+**Fronted** | <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white"> <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white">
+**Backend** | <img src="https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white"> <img src="https://img.shields.io/badge/Pillow-3693F3?style=for-the-badge&logo=python&logoColor=white">
+**LLM** | <img src="https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=llama&logoColor=white"> <img src="https://img.shields.io/badge/LLaVA-FF6F00?style=for-the-badge&logo=OpenAI&logoColor=white">
+</div>
+
 ## 사용 방법 
 
 사진을 업로드하고 "평가 받기" 버튼 클릭
