@@ -1,4 +1,4 @@
-# 통합 서버: 업로드 → AI 피드백 → 필터 추천 → 필터 적용 → 이전 피드백 확인 + 로그기록 초기화
+# 통합 서버: 업로드 → AI 피드백 → 필터 추천 → 필터 적용 → 이전 피드백 확인
 from flask import Flask, request, render_template, redirect, url_for
 import os
 import requests
@@ -6,7 +6,7 @@ import base64
 import json
 import datetime
 from werkzeug.utils import secure_filename
-from PIL import Image, ImageFilter, ImageEnhance, ExifTags
+from PIL import Image, ImageFilter, ImageEnhance
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads'
@@ -25,25 +25,9 @@ FILTER_MAP = {
     "SMOOTH": ImageFilter.SMOOTH
 }
 
+# 상태 저장 변수
 CURRENT_FILENAME = None
 CURRENT_FILTER = None
-
-def fix_image_orientation(image):
-    try:
-        exif = image._getexif()
-        if exif is not None:
-            orientation_key = [k for k, v in ExifTags.TAGS.items() if v == "Orientation"]
-            if orientation_key:
-                orientation = exif.get(orientation_key[0])
-                if orientation == 3:
-                    image = image.rotate(180, expand=True)
-                elif orientation == 6:
-                    image = image.rotate(270, expand=True)
-                elif orientation == 8:
-                    image = image.rotate(90, expand=True)
-    except Exception:
-        pass
-    return image
 
 @app.route('/')
 def index():
@@ -56,11 +40,13 @@ def evaluate():
     if not file:
         return redirect(url_for('index'))
 
+    # 파일 저장
     filename = datetime.datetime.now().strftime("%Y%m%d_%H%M%S_") + secure_filename(file.filename)
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
     CURRENT_FILENAME = filename
 
+    # 평가 프롬프트
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, 'r', encoding='utf-8') as f:
             previous_feedback = f.read()
@@ -71,38 +57,44 @@ def evaluate():
         만약 개선된 부분이 없다면, 그 사실도 솔직하고 냉정하게 판단하여 서술할 것.
 
         반드시 한글로 응답할 것.
-        반드시 다음 형식에 맞춰 응답할 것: {{
-        총점 : "S ~ D 사이의 등급에서 점수를 매길것"
-        조리개 : "점수" "느낀점 밑 개선점"
-        iso : "점수" "느낀점 밑 개선점"
-        셔터속도 : "점수" "느낀점 밑 개선점"
+        자세히 응답할 것.
+        반드시 다음 JSON 형식에 맞춰 응답할 것: {{
+        "overall_grade": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D"
+        "overall_feedback": "사용자가 올린 사진이 어떤 사진인지 분석하고 이에 대한 감상평을 출력할 것. 셔터 속도, 조리개 값, ISO는 절대 언급하지 말 것."
+        "shutter_speed_score": "셔터 속도만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "shutter_speed_comment": "셔터 속도만을 기준으로 사진을 분석하고 설명할 것."
+        "aperture_score": "조리개 값만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 출력할 것."
+        "aperture_comment": "조리개 값만을 기준으로 사진을 분석하고 설명할 것."
+        "iso_score": "ISO만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 출력할 것."
+        "iso_comment": "ISO만을 기준으로 사진을 분석하고 설명할 것."
         }}
-        절대로 항목을 섞지 말것.
-        모든 항목을 채울 것.
-        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
         """
     else:
         prompt = f"""
         반드시 한글로 응답할 것.
-        반드시 다음 형식에 맞춰 응답할 것: {{
-        총점 : "S ~ D 사이의 등급에서 점수를 매길것"
-        조리개 : "점수" "느낀점 밑 개선점"
-        iso : "점수" "느낀점 밑 개선점"
-        셔터속도 : "점수" "느낀점 밑 개선점"
+        자세히 응답할 것.
+        반드시 다음 JSON 형식에 맞춰 응답할 것: {{
+        "overall_grade": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D"
+        "overall_feedback": "사용자가 올린 사진이 어떤 사진인지 분석하고 이에 대한 감상평을 출력할 것. 셔터 속도, 조리개 값, ISO는 절대 언급하지 말 것."
+        "shutter_speed_score": "셔터 속도만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 작성할 것."
+        "shutter_speed_comment": "셔터 속도만을 기준으로 사진을 분석하고 설명할 것."
+        "aperture_score": "조리개 값만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 출력할 것."
+        "aperture_comment": "조리개 값만을 기준으로 사진을 분석하고 설명할 것."
+        "iso_score": "ISO만을 기준으로 평가하고 점수를 부여할 것. 1~10 사이의 정수만 출력할 것."
+        "iso_comment": "ISO만을 기준으로 사진을 분석하고 설명할 것."
         }}
-        절대로 항목을 섞지 말것.
-        모든 항목을 채울 것.
-        문장을 출력하기 전에 한글이 어색하지 않은지 검토하고 한 번 더 수정할 것.
         """
 
-    feedback = get_llava_response(filepath, prompt)
+    # 피드백 요청
+    feedback = analyze_with_llava(filepath, prompt)
     with open(LOG_FILE, 'w', encoding='utf-8') as f:
-        f.write(feedback)
+        f.write(json.dumps(feedback, ensure_ascii=False, indent=2))
     save_history(filename, feedback)
 
+    # 필터 추천
     filter_prompt = """
 당신은 사진 전문가입니다. 아래 이미지를 보고 다음 중 하나의 필터를 추천하고 그 이유를 설명하세요.
-가능한 필터: ["BLUR", "SHARPEN", "DETAIL", "EDGE_ENHANCE", "SMOOTH"]
+가능한 필터: [\"BLUR\", \"SHARPEN\", \"DETAIL\", \"EDGE_ENHANCE\", \"SMOOTH\"]
 
 아래 JSON 형식으로만 출력하세요. 또한 reason을 출력할때는 반드시 한국어로 설명해줘:
 {
@@ -110,20 +102,9 @@ def evaluate():
   "reason": "왜 이 필터를 추천하는지 한글로 설명해줘."
 }
 """
-    analysis = get_llava_response(filepath, filter_prompt)
-    recommended = None
-    reason = "없음"
-    try:
-        import re
-        m = re.search(r'"recommended_filter"\s*:\s*"([^"]+)"', analysis)
-        if m:
-            recommended = m.group(1).strip().upper()
-        m2 = re.search(r'"reason"\s*:\s*"([^"]+)"', analysis)
-        if m2:
-            reason = m2.group(1).strip()
-    except Exception:
-        pass
-    CURRENT_FILTER = recommended
+    analysis = analyze_with_llava(filepath, filter_prompt)
+    CURRENT_FILTER = analysis.get("recommended_filter", "").strip().upper() if analysis else None
+    reason = analysis.get("reason", "없음") if analysis else "분석 실패"
 
     return render_template('result.html', image_path=filepath, feedback=feedback,
                            filter_name=CURRENT_FILTER, reason=reason)
@@ -142,7 +123,6 @@ def apply_filter():
 
     try:
         img = Image.open(original_path)
-        img = fix_image_orientation(img)
         if CURRENT_FILTER == "BLUR":
             filtered = img.filter(ImageFilter.GaussianBlur(radius=8))
         elif CURRENT_FILTER == "SHARPEN":
@@ -169,14 +149,71 @@ def history():
     entries.sort(key=lambda x: x['timestamp'], reverse=True)
     return render_template('history.html', entries=entries)
 
+def analyze_with_llava(image_path, prompt):
+    with open(image_path, 'rb') as f:
+        encoded_image = base64.b64encode(f.read()).decode('utf-8')
+
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json={
+            "model": "llava",
+            "prompt": prompt,
+            "images": [encoded_image],
+            "stream": True
+        },
+        stream=True
+    )
+
+    full_text = ""
+    for line in response.iter_lines():
+        if line:
+            try:
+                data = json.loads(line.decode('utf-8'))
+                full_text += data.get("response", "")
+            except:
+                continue
+
+    try:
+        json_start = full_text.find("{")
+        json_end = full_text.rfind("}") + 1
+        json_str = full_text[json_start:json_end]
+        return json.loads(json_str)
+    except Exception as e:
+        print("LLaVA 응답 파싱 실패:", e)
+        print("응답 원문:\n", full_text)
+        return {"error": "파싱 실패", "raw_response": full_text}
+
+def save_history(filename, feedback):
+    entry = {
+        "filename": filename,
+        "timestamp": datetime.datetime.now().isoformat(),
+        "feedback": feedback
+    }
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+            history = json.load(f)
+    else:
+        history = []
+    history.append(entry)
+    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
+        json.dump(history, f, ensure_ascii=False, indent=2)
+
+def load_history():
+    if os.path.exists(HISTORY_FILE):
+        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return []
+
 @app.route('/detail/<filename>')
 def detail(filename):
     entries = load_history()
-    entry = next((e for e in entries if e['filename'] == filename), None)
-    if not entry:
-        return "해당 피드백이 존재하지 않습니다.", 404
-    image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    return render_template('detail.html', image_path=image_path, feedback=entry['feedback'], timestamp=entry['timestamp'])
+    for entry in entries:
+        if entry['filename'] == filename:
+            entry['feedback_pretty'] = json.dumps(entry['feedback'], ensure_ascii=False, indent=2)
+            existing_files = os.listdir(app.config['UPLOAD_FOLDER'])
+            return render_template('detail.html', entry=entry, existing_files=existing_files)
+    
+    return "분석 기록이 없습니다.", 404
 
 @app.route('/delete_history/<filename>', methods=['POST'])
 def delete_history(filename):
@@ -212,52 +249,6 @@ def reset_logs():
     #     if os.path.isfile(path):
     #         os.remove(path)
     return redirect(url_for('index'))
-
-def get_llava_response(image_path, prompt):
-    with open(image_path, 'rb') as f:
-        encoded_image = base64.b64encode(f.read()).decode('utf-8')
-
-    response = requests.post(
-        "http://localhost:11434/api/generate",
-        json={
-            "model": "llava",
-            "prompt": prompt,
-            "images": [encoded_image],
-            "stream": True
-        },
-        stream=True
-    )
-
-    full_text = ""
-    for line in response.iter_lines():
-        if line:
-            try:
-                data = json.loads(line.decode('utf-8'))
-                full_text += data.get("response", "")
-            except Exception:
-                continue
-    return full_text.strip()
-
-def save_history(filename, feedback):
-    entry = {
-        "filename": filename,
-        "timestamp": datetime.datetime.now().isoformat(),
-        "feedback": feedback
-    }
-    if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-            history = json.load(f)
-    else:
-        history = []
-    history.append(entry)
-    with open(HISTORY_FILE, 'w', encoding='utf-8') as f:
-        json.dump(history, f, ensure_ascii=False, indent=2)
-
-def load_history():
-    if os.path.exists(HISTORY_FILE):
-        with open(HISTORY_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
 
 if __name__ == '__main__':
     app.run(debug=True)
