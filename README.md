@@ -65,6 +65,15 @@ http://localhost:5000
 
 └── README.md # 프로젝트 설명 파일(이 문서)
 
+## 📹 Demo
+### 🪐 메인페이지
+
+### 🪐 사진 피드백 페이지
+
+### 🪐 이미지 필터 적용 결과 페이지
+
+### 🪐 이전 피드백 결과 페이지
+
 ## 💻 System Architechture
 ![Image](https://github.com/user-attachments/assets/c13af8f0-42f9-42fc-a66c-93c6e9ce116e)
 ---
