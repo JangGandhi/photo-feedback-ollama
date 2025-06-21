@@ -65,6 +65,11 @@ http://localhost:5000
 
 └── README.md # 프로젝트 설명 파일(이 문서)
 
+## 💻 System Architechture
+![Image](https://github.com/user-attachments/assets/a564b370-75d7-4fcb-9fa7-10b75852c2d6)
+
+---
+
 ## 사용 방법 
 
 사진을 업로드하고 "평가 받기" 버튼 클릭
