@@ -66,8 +66,7 @@ http://localhost:5000
 └── README.md # 프로젝트 설명 파일(이 문서)
 
 ## 💻 System Architechture
-![Image](https://github.com/user-attachments/assets/a564b370-75d7-4fcb-9fa7-10b75852c2d6)
-
+![Image](https://github.com/user-attachments/assets/c13af8f0-42f9-42fc-a66c-93c6e9ce116e)
 ---
 
 ## 💡 Tech stack 
