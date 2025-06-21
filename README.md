@@ -78,12 +78,21 @@ http://localhost:5000
 
 ## 📹 Demo
 ### 🪐 메인페이지
+![Image](https://github.com/user-attachments/assets/75e83ec7-20c9-48b0-97ad-0ed424c6cbae)
 
 ### 🪐 사진 피드백 페이지
+![Image](https://github.com/user-attachments/assets/9bd8e3ba-9f55-455b-945d-9456da44adc0)
+
+![Image](https://github.com/user-attachments/assets/626f4b45-a9e1-4f2e-a071-daada903afa1)
 
 ### 🪐 이미지 필터 적용 결과 페이지
+![Image](https://github.com/user-attachments/assets/ad77a94c-1d17-4e8a-8d72-beab2f3efd95)
 
 ### 🪐 이전 피드백 결과 페이지
+![Image](https://github.com/user-attachments/assets/a982d65d-c6da-415f-a41c-efb49dc9c9f9)
+
+### 🪐 이전 피드백 결과 상세 페이지
+![Image](https://github.com/user-attachments/assets/dc3a17e0-a850-40e1-9bc0-6052f3b0673b)
 
 ## 💻 System Architechture
 ![Image](https://github.com/user-attachments/assets/c13af8f0-42f9-42fc-a66c-93c6e9ce116e)
