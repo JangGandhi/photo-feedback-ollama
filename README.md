@@ -17,13 +17,13 @@ pip install flask requests pillow
 Ollama 설치
 https://ollama.com/download 에서 운영체제에 맞는 설치파일을 다운로드하여 설치하세요.
 
-### LLaVA 모델 설치 명령어
+### 3. LLaVA 모델 설치 명령어
 
 ```
 ollama pull llava
 ```
 
-### 3. Ollama 서버 실행 명령어
+### 4. Ollama 서버 실행 명령어
 
 ```
 ollama run llava
@@ -32,7 +32,7 @@ ollama run llava
 위 명령어를 입력하면 LLaVA 모델이 로컬에서 실행되고,
 Flask는 이 서버에 이미지를 전달하여 AI 피드백을 받아옵니다.
 
-### 4. Flask 서버 실행 명령어
+### 5. Flask 서버 실행 명령어
 
 ```
 python app.py
@@ -76,24 +76,24 @@ http://localhost:5000
 └── README.md # 프로젝트 설명 파일(이 문서)
 ```
 
-## 📹 Demo
+##  Demo
 ![Image](https://github.com/user-attachments/assets/08999833-53e5-4ae3-886f-45ca6688169b)
 
-### 🪐 메인페이지
+### 1. 메인페이지
 ![Image](https://github.com/user-attachments/assets/75e83ec7-20c9-48b0-97ad-0ed424c6cbae)
 
-### 🪐 사진 피드백 페이지
+### 2. 사진 피드백 페이지
 ![Image](https://github.com/user-attachments/assets/9bd8e3ba-9f55-455b-945d-9456da44adc0)
 
 ![Image](https://github.com/user-attachments/assets/9bd4d00b-1206-4ca4-aef9-d69c777c013b)
 
-### 🪐 이미지 필터 적용 결과 페이지
+### 3. 이미지 필터 적용 결과 페이지
 ![Image](https://github.com/user-attachments/assets/ad77a94c-1d17-4e8a-8d72-beab2f3efd95)
 
-### 🪐 이전 피드백 결과 페이지
+### 4. 이전 피드백 결과 페이지
 ![Image](https://github.com/user-attachments/assets/a982d65d-c6da-415f-a41c-efb49dc9c9f9)
 
-### 🪐 이전 피드백 결과 상세 페이지
+### 5. 이전 피드백 결과 상세 페이지
 ![Image](https://github.com/user-attachments/assets/dc3a17e0-a850-40e1-9bc0-6052f3b0673b)
 
 ## 💻 System Architechture
@@ -113,15 +113,15 @@ http://localhost:5000
 
 ## 📸 사용 방법
 
-- 📂 사진을 업로드하고 **"사진 업로드 및 평가"** 버튼 클릭  
-- 🤖 AI가 피드백 제공  
-- 🎨 AI가 추천한 필터 내용을 확인  
-- 🖼️ **"필터 적용하기"** 버튼 클릭 → 원본과 필터 이미지 비교  
-- 🕓 **"이전 피드백 확인"** 버튼 → 과거 분석 이력 확인  
-- 🧹 **"로그기록 초기화"** 버튼 → 피드백 기록 초기화
+- 1. 사진을 업로드하고 **"사진 업로드 및 평가"** 버튼 클릭  
+- 2. AI가 피드백 제공  
+- 3. AI가 추천한 필터 내용을 확인  
+- 4. **"필터 적용하기"** 버튼 클릭 → 원본과 필터 이미지 비교  
+- 5. **"이전 피드백 확인"** 버튼 → 과거 분석 이력 확인  
+- 6. **"로그기록 초기화"** 버튼 → 피드백 기록 초기화
 
 
 ## ⚠️ 유의사항
 
-- 🟢 **Ollama 서버는 백그라운드에서 계속 켜져 있어야** 정상 작동합니다.
+ **Ollama 서버는 백그라운드에서 계속 켜져 있어야** 정상 작동합니다.
 ---
