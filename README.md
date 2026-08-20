@@ -1,4 +1,4 @@
-# ollama-photo-feedback# 사진 피드백 웹 애플리케이션 (Flask + Ollama LLaVA)
+# ollama-photo-feedback 사진 피드백 웹 애플리케이션 (Flask + Ollama LLaVA)
 
 이 프로젝트는 사용자가 업로드한 사진을 AI 모델(LLaVA)을 통해 분석하여  
 사진의 점수 및 개선점을 피드백하고, 이전 사진과 비교 평가까지 해주는 웹 서비스입니다.
